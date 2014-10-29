@@ -1,9 +1,9 @@
 /**
- * @file    main.cpp
- * @brief   A simple example for maintaining a straight line with the compass.
+ * @file    sensors.cpp
+ * @brief   While the robot moves, print frontal distance sensor values to console
  *
- * @author  Raul Perula-Martinez <raul.perula@uc3m.es>
- * @date    2014-07
+ * @author  Jessica Cecibel Arrobo Sarango <100283869@alumnos.uc3m.es>
+ * @date    2014-10
  */
 
 #include "MyRobot.h"
