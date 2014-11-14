@@ -17,49 +17,49 @@ using namespace webots;
 #define MAX_SPEED       100
 
 class MyRobot : public DifferentialWheels {
-    private:
-        int _time_step;
 
-        Compass * _my_compass;
+private:
+    int _time_step;
 
-        double _left_speed, _right_speed, _left_encoder, _right_encoder;
+    Compass * _my_compass;
 
-    public:
-        /**
+    double _left_speed, _right_speed, _left_encoder, _right_encoder;
+
+public:
+
+    /**
          * @brief Empty constructor of the class.
          */
-        MyRobot();
+    MyRobot();
 
-        /**
+    /**
          * @brief Destructor of the class.
          */
-        ~MyRobot();
+    ~MyRobot();
 
-        /**
+    /**
          * @brief User defined function for initializing and running the template class.
          */
-        void run();
+    void run();
 
-        /**
+    /**
           * @brief Converting bearing vector from compass to angle (in degrees).
           */
-        double convert_bearing_to_degrees(const double* in_vector);
+    double convert_bearing_to_degrees(const double* in_vector);
 
-        /**
+    /**
           * @brief Kind of movement to do
           */
-        int move();
+    int move();
 
-        /**
+    /**
           * @brief Send actuators commands according to the mode
           */
-        void mode_selection(int mode);
+    void mode_selection(int mode);
 
-        /**
+    /**
           * @brief Calculate actual position and crossed distance
           */
-        vector <double> calc_distance(vector <double> prev_position);
-
-
+    vector <double> calc_distance(vector <double> prev_position);
 
 };
