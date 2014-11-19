@@ -76,7 +76,8 @@ void MyRobot::run()
 
     double ir_val[NUM_DISTANCE_SENSOR];
     int control=0;
-    double compass_angle, angle;
+    double compass_angle;
+    int angle;
 
     while (step(_time_step) != -1) {
 
@@ -86,6 +87,16 @@ void MyRobot::run()
 
             ir_val[i] = _distance_sensor[i]->getValue();
         }
+
+        cout << "ds1: " <<  ir_val[0] << endl;
+        cout << "ds3: " <<  ir_val[1] << endl;
+        cout << "ds4: " <<  ir_val[2] << endl;
+        cout << "ds6: " <<  ir_val[3] << endl;
+        cout << "ds9: " <<  ir_val[4] << endl;
+        cout << "ds11: " <<  ir_val[5] << endl;
+        cout << "ds12: " <<  ir_val[6] << endl;
+        cout << "ds14: " <<  ir_val[7] << endl;
+
 
         const double *compass_val = _my_compass->getValues();
 
@@ -100,24 +111,31 @@ void MyRobot::run()
 
             cout << "Detected person" << endl;
             _mode = STOP;
-            angle = compass_angle;
+            angle = (int)compass_angle;
             cout << "Angle: "<< angle<< endl;
             control=1;
         }
         else{
 
-            _mode = FORWARD;
+            //_mode = FORWARD;
 
             // Call to Control function
-            //Control(ir_val);
+            Control(ir_val);
 
         }
 
-        if(control == 1 && compass_angle < angle){
+        if(control == 1 && ((int)compass_angle != angle||(int)compass_angle != (angle+1)||(int)compass_angle != (angle+2)||(int)compass_angle != (angle+3))){
 
 
             cout << "Encoder: " << _right_encoder << endl;
             _mode = TURN_AROUND;
+
+            cout << "Brujula: " << (int)compass_angle << endl;
+
+            if((int)compass_angle == (angle+1)||(int)compass_angle == (angle+2)||(int)compass_angle == (angle+3)){
+
+                control = 2;
+            }
 
 
         }
@@ -136,39 +154,50 @@ void MyRobot::Control(double sensor_val[]) {
     if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
     {
         _mode = FORWARD;
+        cout << "Forward1" << endl;
     }
     if(sensor_val[0]== 0 && sensor_val[1] >100 && sensor_val[2]> 100 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
     {
         _mode = FORWARD;
+        cout << "Forward2" << endl;
     }
-    if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5] > 100 &&sensor_val[6]> 100 &&sensor_val[7]== 0)
+    if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]>100 && sensor_val[5] > 100 &&sensor_val[6]> 100 &&sensor_val[7]== 0)
     {
         _mode = FORWARD;
+        cout << "Forward3" << endl;
     }
     if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]> 100)
     {
         _mode = TURN_LEFT;
+        cout << "Turn left 1" << endl;
     }
     if(sensor_val[0]> 100 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
     {
         _mode = TURN_RIGHT;
+        cout << "Turn right 1" << endl;
     }
     if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]> 100 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
     {
         _mode = TURN_RIGHT;
+        cout << "Turn right 2" << endl;
     }
     if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2] > 100 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
     {
         _mode = TURN_LEFT;
+        cout << "Turn left 2" << endl;
     }
-    if(sensor_val[0]> 100 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]> 100)
+    if(sensor_val[0]> 50 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]> 50)
     {
         _mode = OBSTACLE_AVOID_LEFT;
+        cout << "Avoid obstacle 1" << endl;
     }
-    if(sensor_val[0]== 0 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]== 0 &&sensor_val[6]== 0 &&sensor_val[7]== 0)
+    if(sensor_val[0]> 100 && sensor_val[1] == 0 &&sensor_val[2]== 0 &&sensor_val[3]== 0 &&sensor_val[4]== 0 && sensor_val[5]> 100 &&sensor_val[6] > 100 &&sensor_val[7]> 100)
     {
-        _mode = FORWARD;
+        _mode = OBSTACLE_AVOID_LEFT;
+        cout << "Avoid obstacle 2" << endl;
     }
+
+
 
 }
 
@@ -183,13 +212,13 @@ void MyRobot::mode_selection(){
         _right_speed = MAX_SPEED;
         break;
     case TURN_RIGHT:
-        _left_speed = MAX_SPEED;
-        _right_speed = MAX_SPEED / 2;
+        _left_speed = MAX_SPEED/2;
+        _right_speed = MAX_SPEED / 5;
         break;
 
     case TURN_LEFT:
-        _left_speed = MAX_SPEED / 2;
-        _right_speed = MAX_SPEED;
+        _left_speed = MAX_SPEED /5;
+        _right_speed = MAX_SPEED/2;
         break;
     case OBSTACLE_AVOID_LEFT:
         _left_speed = -MAX_SPEED / 3.0;
@@ -269,7 +298,7 @@ double MyRobot:: color_detector(int camera, int color)
 
     percentage = (sum / (float) (image_width * image_height)) * 100;
 
-    cout <<"Porcentaje: " << percentage << endl;
+    //cout <<"Porcentaje: " << percentage << endl;
 
     return percentage;
 }
